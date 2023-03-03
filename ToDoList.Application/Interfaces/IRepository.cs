@@ -9,7 +9,7 @@ namespace ToDoList.Application.Interfaces
 {
     public interface IRepository<T> where T : class
     {
-        IEnumerable<T> GetDataList(SortStatus status);
+        IQueryable<T> GetData();
         void AddData(T data);
         void RemoveData(T data);
         void ChangeData(T oldData, T newData);

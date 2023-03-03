@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Input;
 using System.Windows.Media;
+using ToDoList.Application.Data;
 using ToDoList.Application.Enums;
-using ToDoList.Application.Infrastructure;
+using ToDoList.Application.Models;
 using ToDoListCore.Infrastructure.Command;
 using ToDoListCore.Models;
 
@@ -26,7 +26,7 @@ namespace ToDoListCore.ViewModels
         }
         public List<ToDoModel> ToDoList
         {
-            get { return TaskDb.db.GetDataList(sortStatus).ToList(); }
+            get { return SortedData.GetData(TaskHelper.db.GetData(), sortStatus); }
             set { toDoList = value; }
         }
         public string TaskText
@@ -57,7 +57,7 @@ namespace ToDoListCore.ViewModels
                 {
                     if (TaskText != null && TaskText != string.Empty)
                     {
-                        TaskDb.db.AddData(new ToDoModel(TaskText));
+                        TaskHelper.db.AddData(new ToDoModel(TaskText));
                         Set(ref taskText, string.Empty, nameof(TaskText));
                         OnPropertyChanged(nameof(ToDoList));
                     }
@@ -68,7 +68,7 @@ namespace ToDoListCore.ViewModels
         private void DeleteItem(object obj)
         {
             ToDoModel item = obj as ToDoModel;
-            TaskDb.db.RemoveData(item);
+            TaskHelper.db.RemoveData(item);
             OnPropertyChanged(nameof(ToDoList));
         }
 

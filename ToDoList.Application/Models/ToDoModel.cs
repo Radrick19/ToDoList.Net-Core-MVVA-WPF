@@ -24,15 +24,16 @@ namespace ToDoListCore.Models
 
         public bool IsDone { get; set; }
 
+        public void OnPropertyChanged([CallerMemberName] string property = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
+        }
+
         public ICommand DeleteClick
         {
             get { return new RelayCommand((obj) => DeleteClickEvent(this)); }
         }
 
-        public void OnPropertyChanged([CallerMemberName] string property = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
-        }
         public ICommand ChangeIsDoneStatus
         {
             get

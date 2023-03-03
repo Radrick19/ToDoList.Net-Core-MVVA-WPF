@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Data;
 using System.Data.SQLite;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using ToDoList.Application.Enums;
 using ToDoList.Application.Interfaces;
 using ToDoListCore.Models;
 
@@ -49,6 +43,39 @@ namespace ToDoList.Application.Data
             sqlCommand.ExecuteNonQuery();
         }
 
+        public IQueryable<ToDoModel> GetData()
+        {
+            sqlCommand.CommandText = "SELECT * FROM Tasks";
+            IList<ToDoModel> returnModel = new List<ToDoModel>();
+            DataTable dt = new DataTable();
+            SQLiteDataAdapter adapter = new SQLiteDataAdapter(sqlCommand);
+            adapter.Fill(dt);
+            foreach (DataRow item in dt.Rows)
+            {
+                string task = item.Field<string>("task");
+                long id = item.Field<long>("id");
+                bool isDone = Convert.ToBoolean(item.Field<long>("isDone"));
+                returnModel.Add(new ToDoModel(task, isDone, id));
+            }
+            return returnModel.AsQueryable();
+        }
+
+        public SQLiteTaskController(string dataPath = "Data/TaskDB.db")
+        {
+            sqlConnection = new SQLiteConnection();
+            sqlCommand = new SQLiteCommand();
+            if (DbExists())
+            {
+                sqlConnection = new SQLiteConnection("Data Source=" + dataPath + ";Version=3;");
+                sqlConnection.Open();
+                sqlCommand.Connection = sqlConnection;
+            }
+            else
+            {
+                CreateDataBase("Data/TaskDB.db");
+            }
+        }
+
         private bool DbExists()
         {
             if (File.Exists("Data/TaskDB.db"))
@@ -75,51 +102,6 @@ namespace ToDoList.Application.Data
             catch (SQLiteException ex)
             {
                 MessageBox.Show("Can't create data base : " + ex.Message);
-            }
-        }
-
-        public IEnumerable<ToDoModel> GetDataList(SortStatus status)
-        {
-            switch (status)
-            {
-                case SortStatus.All:
-                    sqlCommand.CommandText = "SELECT * FROM Tasks";
-                    break;
-                case SortStatus.Done:
-                    sqlCommand.CommandText = "SELECT * FROM Tasks WHERE isDone ='1'";
-                    break;
-                case SortStatus.Active:
-                    sqlCommand.CommandText = "SELECT * FROM Tasks WHERE isDone ='0'";
-                    break;
-                default: sqlCommand.CommandText = "SELECT * FROM Tasks"; break;
-            }
-            IList<ToDoModel> returnModel = new List<ToDoModel>();
-            DataTable dt = new DataTable();
-            SQLiteDataAdapter adapter = new SQLiteDataAdapter(sqlCommand);
-            adapter.Fill(dt);
-            foreach (DataRow item in dt.Rows)
-            {
-                string task = item.Field<string>("task");
-                long id = item.Field<long>("id");
-                bool isDone = Convert.ToBoolean(item.Field<long>("isDone"));
-                returnModel.Add(new ToDoModel(task, isDone, id));
-            }
-            return returnModel;
-        }
-
-        public SQLiteTaskController(string dataPath = "Data/TaskDB.db")
-        {
-            sqlConnection = new SQLiteConnection();
-            sqlCommand = new SQLiteCommand();
-            if (DbExists())
-            {
-                sqlConnection = new SQLiteConnection("Data Source=" + dataPath + ";Version=3;");
-                sqlConnection.Open();
-                sqlCommand.Connection = sqlConnection;
-            }
-            else
-            {
-                CreateDataBase("Data/TaskDB.db");
             }
         }
     }
