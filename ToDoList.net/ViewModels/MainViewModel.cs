@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Input;
 using System.Windows.Media;
 using ToDoList.Application.Data;
 using ToDoList.Application.Enums;
-using ToDoList.Application.Models;
+using ToDoList.Application.Infrastructure;
 using ToDoListCore.Infrastructure.Command;
 using ToDoListCore.Models;
 
@@ -24,10 +25,13 @@ namespace ToDoListCore.ViewModels
         {
             get { return sortStatus == SortStatus.Done ? new SolidColorBrush(Color.FromRgb(194, 231, 255)) : new SolidColorBrush(Color.FromRgb(255, 255, 255)); }
         }
-        public List<ToDoModel> ToDoList
+        public List<ToDoModel> SortedList
         {
-            get { return SortedData.GetData(TaskHelper.db.GetData(), sortStatus); }
-            set { toDoList = value; }
+            get 
+            {
+                IQueryable<ToDoModel> models = TaskHelper.db.GetData();
+                return SortedData.GetData(models, sortStatus);
+            }
         }
         public string TaskText
         {
@@ -39,7 +43,7 @@ namespace ToDoListCore.ViewModels
             get { return sortStatus; }
             set
             {
-                Set(ref sortStatus, value, nameof(ToDoList));
+                Set(ref sortStatus, value, nameof(SortedList));
                 OnPropertyChanged(nameof(AllSortModeColor));
                 OnPropertyChanged(nameof(ActiveSortModeColor));
                 OnPropertyChanged(nameof(DoneSortModeColor));
@@ -59,7 +63,7 @@ namespace ToDoListCore.ViewModels
                     {
                         TaskHelper.db.AddData(new ToDoModel(TaskText));
                         Set(ref taskText, string.Empty, nameof(TaskText));
-                        OnPropertyChanged(nameof(ToDoList));
+                        OnPropertyChanged(nameof(SortedList));
                     }
                 });
             }
@@ -69,7 +73,7 @@ namespace ToDoListCore.ViewModels
         {
             ToDoModel item = obj as ToDoModel;
             TaskHelper.db.RemoveData(item);
-            OnPropertyChanged(nameof(ToDoList));
+            OnPropertyChanged(nameof(SortedList));
         }
 
         public ICommand SetAllSort
@@ -107,7 +111,7 @@ namespace ToDoListCore.ViewModels
 
         private void UpdateListInfo()
         {
-            OnPropertyChanged(nameof(ToDoList));
+            OnPropertyChanged(nameof(SortedList));
         }
 
         public MainViewModel()

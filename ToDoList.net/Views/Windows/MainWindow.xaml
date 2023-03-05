@@ -33,7 +33,7 @@
                 <Button Template="{DynamicResource RightSortButton}" x:Name="DoneSort_BTN" Command="{Binding SetDoneSort}" Width="60" Height="30" Background="{Binding DoneSortModeColor}" Content="Done" FontSize="16" CommandParameter="{Binding Content, ElementName=DoneSort_BTN}"/>
             </StackPanel>
         </Grid>
-        <ListBox Margin="20,20,20,20" Grid.Row="1" Width="auto" ItemsSource="{Binding ToDoList}" ItemTemplate="{StaticResource TaskItem}" HorizontalContentAlignment="Stretch"/>
+        <ListBox Margin="20,20,20,20" Grid.Row="1" Width="auto" ItemsSource="{Binding SortedList}" ItemTemplate="{StaticResource TaskItem}" HorizontalContentAlignment="Stretch"/>
         <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="10,0">
             <TextBox Text="{Binding TaskText, Mode=TwoWay}" MinWidth="200" Height="40" FontSize="18" VerticalContentAlignment="Center" Padding="5">
             </TextBox>

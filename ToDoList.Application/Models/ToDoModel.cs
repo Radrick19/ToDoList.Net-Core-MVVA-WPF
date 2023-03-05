@@ -1,8 +1,10 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using ToDoList.Application.Infrastructure;
+using ToDoList.Application.Data;
 using ToDoListCore.Infrastructure.Command;
 
 namespace ToDoListCore.Models
@@ -39,12 +41,12 @@ namespace ToDoListCore.Models
             get
             {
                 return new RelayCommand((obj) => {
-
+                    bool newIsDoneData;
                     if (IsDone)
-                        IsDone = false;
+                        newIsDoneData = false;
                     else
-                        IsDone = true;
-                    TaskDb.db.ChangeData(this, new ToDoModel(this.Task, IsDone, this.Id));
+                        newIsDoneData = true;
+                    TaskHelper.db.ChangeData(new ToDoModel(Task, newIsDoneData, Id), this);
                     OnPropertyChanged(nameof(IsDoneButtonBackgroundColor));
                     SortInfoChanged();
                 });

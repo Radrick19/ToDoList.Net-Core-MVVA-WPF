@@ -9,7 +9,7 @@ namespace ToDoList.Application.Data
 
         static TaskHelper()
         {
-            db = new SQLiteTaskController();
+            db = new SQLiteEFTaskController();
         }
     }
 }

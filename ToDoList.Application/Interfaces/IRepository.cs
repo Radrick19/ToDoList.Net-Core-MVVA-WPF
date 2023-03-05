@@ -12,6 +12,6 @@ namespace ToDoList.Application.Interfaces
         IQueryable<T> GetData();
         void AddData(T data);
         void RemoveData(T data);
-        void ChangeData(T oldData, T newData);
+        void ChangeData(T newData, T oldData);
     }
 }

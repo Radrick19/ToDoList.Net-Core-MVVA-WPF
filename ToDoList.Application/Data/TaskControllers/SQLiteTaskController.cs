@@ -4,7 +4,7 @@ using System.Windows;
 using ToDoList.Application.Interfaces;
 using ToDoListCore.Models;
 
-namespace ToDoList.Application.Data
+namespace ToDoList.Application.Data.TaskControllers
 {
     internal class SQLiteTaskController : IRepository<ToDoModel>
     {
@@ -30,11 +30,11 @@ namespace ToDoList.Application.Data
             }
         }
 
-        public void ChangeData(ToDoModel oldData, ToDoModel newData)
+        public void ChangeData(ToDoModel newData, ToDoModel oldData)
         {
             sqlCommand.CommandText = $"DELETE FROM [Tasks] WHERE [id]='{oldData.Id}'";
             sqlCommand.ExecuteNonQuery();
-            AddData(new ToDoModel(newData.Task, newData.IsDone, oldData.Id));
+            AddData(newData);
         }
 
         public void RemoveData(ToDoModel data)
