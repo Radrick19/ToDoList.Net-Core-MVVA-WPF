@@ -29,10 +29,11 @@ namespace ToDoListCore.ViewModels
         {
             get 
             {
-                IQueryable<ToDoModel> models = TaskHelper.db.GetData();
-                return SortedData.GetData(models, sortStatus);
+                dataList = TaskHelper.db.GetData();
+                return SortedData.GetData(dataList, sortStatus);
             }
         }
+        private IQueryable<ToDoModel> dataList;
         public string TaskText
         {
             get { return taskText; }
@@ -51,7 +52,6 @@ namespace ToDoListCore.ViewModels
         }
         private SortStatus sortStatus = SortStatus.Active;
         private string taskText;
-        private List<ToDoModel> toDoList;
 
         public ICommand AddItem
         {

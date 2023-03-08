@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Markup;
-using ToDoList.Application.Interfaces;
+﻿using ToDoList.Application.Interfaces;
 using ToDoListCore.Models;
 
 namespace ToDoList.Application.Data.TaskControllers
@@ -15,7 +9,7 @@ namespace ToDoList.Application.Data.TaskControllers
         {
             using (ApplicationContext db = new ApplicationContext())
             {
-                db.Add(data);
+                db.ToDoModels.Add(data);
                 db.SaveChanges();
             }
         }
@@ -24,8 +18,7 @@ namespace ToDoList.Application.Data.TaskControllers
         {
             using (ApplicationContext db = new ApplicationContext())
             {
-                db.Remove(oldData);
-                db.Add(newData);
+                db.ToDoModels.Update(newData);
                 db.SaveChanges();
             }
         }
@@ -41,7 +34,7 @@ namespace ToDoList.Application.Data.TaskControllers
         {
             using (ApplicationContext db = new ApplicationContext())
             {
-                db.Remove(data);
+                db.ToDoModels.Remove(data);
                 db.SaveChanges();
             }
         }

@@ -70,6 +70,7 @@ namespace ToDoList.Application.Data.TaskControllers
                 sqlConnection.Open();
                 sqlCommand.Connection = sqlConnection;
             }
+            //Почему он не хочет заходить в елс?
             else
             {
                 CreateDataBase("Data/TaskDB.db");
